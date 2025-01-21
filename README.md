@@ -13,10 +13,10 @@
  ## Api contracts:
         
         [HttpGet("Availability")]
-        public bool IsAvailable([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? start, DateTime? end)
+        public bool GetAvailable([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? start, DateTime? end)
         
         [HttpPost("Availability/Slots")]
-        public IEnumerable<TimeSlot> QueryAvailableTimes([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, [FromBody]List<TimeSlot> timeSlots, int n, int duration)
+        public IEnumerable<TimeSlot> GetAvailableSlots([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, [FromBody]List<TimeSlot> timeSlots, int n, int duration)
         
         [HttpGet("Workload")]
-        public WorkLoadResponse CheckWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
+        public WorkLoadResponse GetWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
