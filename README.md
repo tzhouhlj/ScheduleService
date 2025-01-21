@@ -1,5 +1,6 @@
 # ScheduleService
 ## Assumptions:
+
 	TimeSlot is accurate to the minute
 	Each TimeSlot's start and end are in the same day
 	Agent working hours/day is 8
@@ -10,9 +11,12 @@
 	For QueryAvailableTimes method: find n slots, assume the duration is another input parameter like 30 minutes or 60 minutes
 
  ## Api contracts:
-        [HttpGet("IsAvailable")]
+        
+	[HttpGet("IsAvailable")]
         public bool IsAvailable([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? start, DateTime? end)
-        [HttpPost("AvailableTimes")]
+        
+	[HttpPost("AvailableTimes")]
         public IEnumerable<TimeSlot> QueryAvailableTimes([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, List<TimeSlot> timeSlots, int n, int duration)
-        [HttpGet("Workload")]
+        
+	[HttpGet("Workload")]
         public WorkLoadResponse CheckWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
