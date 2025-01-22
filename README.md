@@ -21,7 +21,7 @@
         [HttpGet("Workloads")]
         public WorkLoadResponse GetWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
 
- 	//Just defined the contracts but not implemented
+        //Defined the contracts but not implemented
         [HttpGet("Schedules")]
         public IList<TimeSlot> GetSchedules([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] List<string> agentIds, DateTime? start, DateTime? end)
 
