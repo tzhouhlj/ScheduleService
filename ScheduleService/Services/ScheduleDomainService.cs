@@ -1,4 +1,5 @@
-﻿using Services.Schedule.Context;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.Schedule.Context;
 using Services.Schedule.Domain.Adapters;
 using Services.Schedule.Models;
 
@@ -50,15 +51,20 @@ namespace Services.Schedule.Services
                 var targetTimeSlots = current.TimeSlots.OrderBy(t => t.Start).ToList();
                 foreach (var t in targetTimeSlots)
                 {
-                    var newTimeSlot = new TimeSlot(t.Start, t.Start.AddMinutes(duration));
-                    if (!OverLap(newTimeSlot, reservedTimeSlots))
+                    var temp = t;
+                    while (temp.Start < t.End && temp.Start.AddMinutes(duration) <= t.End)
                     {
-                        result.Add(newTimeSlot);
-                        count++;
-                        if (count >= n)
+                        var newTimeSlot = new TimeSlot(temp.Start, t.Start.AddMinutes(duration));
+                        if (!OverLap(newTimeSlot, reservedTimeSlots))
                         {
-                            break;
+                            result.Add(newTimeSlot);
+                            count++;
+                            if (count >= n)
+                            {
+                                break;
+                            }
                         }
+                        temp.Start = temp.Start.AddMinutes(duration);
                     }
                 }
             }
@@ -85,18 +91,25 @@ namespace Services.Schedule.Services
                 var availableTimeSlots = new List<TimeSlot>();
                 //also assuming the agent working hours are 8-5
                 //in real case, this can be configuable
-                var freeTimeSlotStart = new DateTime(date.Year, date.Month, date.Day, 8, 8, 0);
+                var freeTimeSlotStart = new DateTime(date.Year, date.Month, date.Day, 8, 0, 0);
+                var freeTimeSlotEnd = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0);
 
                 foreach (var timeSlot in sortedTimeSlots)
                 {
-                    totalScheduledMinutes += timeSlot.End.Subtract(timeSlot.Start).Minutes;                    
+                    var diff = timeSlot.End.Subtract(timeSlot.Start);
+                    totalScheduledMinutes += (int)diff.TotalMinutes;                    
                     if (timeSlot.Start > freeTimeSlotStart)
                     {
                         response.AvailableTimeSlots.Add(new TimeSlot(freeTimeSlotStart, timeSlot.Start));
-                        var end = timeSlot.End;
-                        freeTimeSlotStart = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, 0);
                     }
+                    var end = timeSlot.End;
+                    freeTimeSlotStart = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, 0);
                 }
+                if (freeTimeSlotStart < freeTimeSlotEnd)
+                {
+                    response.AvailableTimeSlots.Add(new TimeSlot(freeTimeSlotStart, freeTimeSlotEnd));
+                }
+
                 response.Busy = totalScheduledMinutes >= STANDARD_WORKING_DAY_IN_MINUTES; 
             } 
 
@@ -107,11 +120,9 @@ namespace Services.Schedule.Services
         {
             foreach (var t2 in reservedTimeSlots)
             {
-                if (
-                    (t1.End > t2.Start && t1.End <= t2.End) ||
+                if ((t1.End > t2.Start && t1.End <= t2.End) ||
                     (t1.Start >= t2.Start && t1.Start < t2.End) ||
-                    (t1.Start >= t2.Start && t1.End >= t2.End)
-                    )
+                    (t1.Start <= t2.Start && t1.End >= t2.End))
                 {
                     return true;
                 }

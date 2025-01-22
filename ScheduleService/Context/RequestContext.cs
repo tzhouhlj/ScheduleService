@@ -16,5 +16,11 @@ namespace Services.Schedule.Context
             this.clientId = outClientId;
             this.agentId = outAgentId;
         }
+
+        public RequestContext(string clientId, string agentId)
+        {
+            this.clientId = clientId;
+            this.agentId = agentId;
+        }
     }
 }
