@@ -36,7 +36,9 @@
 
 ## Working Apis Video:
 ![GetAvailabilities](./screen-capture-availabilty.webm)
+
 ![QueryTimeSlots](./screen-capture-query-timeslots.webm)
+
 ![GetWorkLoads](./screen-capture-workload.webm)
 
 ## Future to do:
