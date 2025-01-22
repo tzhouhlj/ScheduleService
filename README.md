@@ -31,6 +31,14 @@
         [HttpPut("Schedules")]
         public IList<TimeSlot> ModifySchedules([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, List<TimeSlot> timeSlots)
 
+## Unit Test Result:
+![Unit test run result](./PassedUnitTests.png)
+
+## Working Apis Video:
+![GetAvailabilities](./screen-capture-availabilty.webm)
+![QueryTimeSlots](./screen-capture-query-timeslots.webm)
+![GetWorkLoads](./screen-capture-workload.webm)
+
 ## Future to do:
 	1. Add input parameter validations
  	2. Add more complex, edge case test cases
