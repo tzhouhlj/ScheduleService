@@ -10,11 +10,6 @@ namespace ScheduleService.Controllers
     [Route("[controller]")]
     public class ScheduleController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<ScheduleController> _logger;
         private readonly IScheduleService _scheduleService;
         private IRequestContext _requestContext;
@@ -26,25 +21,44 @@ namespace ScheduleService.Controllers
             _scheduleService = scheduleService;
         }
 
-        [HttpGet("IsAvailable")]
-        public bool IsAvailable([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? start, DateTime? end)
+        [HttpGet("Availability")]
+        public bool GetAvailable([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? start, DateTime? end)
         {
             _requestContext = new RequestContext(Request.Headers);
             return _scheduleService.Check(_requestContext, start.Value, end.Value);
         }
 
-        [HttpPost("AvailableTimes")]
-        public IEnumerable<TimeSlot> QueryAvailableTimes([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, List<TimeSlot> timeSlots, int n, int duration)
+        [HttpPost("Availability/Slots")]
+        public IEnumerable<TimeSlot> GetAvailableSlots([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, [FromBody]List<TimeSlot> timeSlots, int n, int duration)
         {
             _requestContext = new RequestContext(Request.Headers);
             return _scheduleService.QueryAvailableTimes(_requestContext, timeSlots, n, duration);
         }
 
         [HttpGet("Workload")]
-        public WorkLoadResponse CheckWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
+        public WorkLoadResponse GetWorkLoad([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, DateTime? date)
         {
             _requestContext = new RequestContext(Request.Headers);
             return _scheduleService.CheckWorkLoad(_requestContext, date.Value);
+        }
+
+        [HttpGet("Schedules")]
+        public IList<TimeSlot> GetSchedules([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] List<string> agentIds, DateTime? start, DateTime? end)
+        {
+            return null;
+        }
+
+        [HttpPost("Schedules")]
+        public IList<TimeSlot> CreateSchedules([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, [FromBody]List<TimeSlot> timeSlots)
+        {
+            return null;
+        }
+
+        //Timeslot will need schedule id
+        [HttpPut("Schedules")]
+        public IList<TimeSlot> ModifySchedules([FromHeader(Name = "x-ci")][Required] string clientId, [FromHeader(Name = "x-ai")][Required] string agentId, List<TimeSlot> timeSlots)
+        {
+            return null;
         }
     }
 }
