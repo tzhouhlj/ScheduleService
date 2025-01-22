@@ -36,5 +36,7 @@
  	2. Add more complex, edge case test cases
   	3. Create intergration tests
    	4. Create environment variable so test data can be used on local or dev environment
-    	5. Alternatively use different IScheduleAdapter for testing or mock
+   	5. Alternatively use different IScheduleAdapter for testing or mock
+   	6. Error handling
+   	7. Add logging
   
